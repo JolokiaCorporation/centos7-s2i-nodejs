@@ -1,0 +1,88 @@
+docker build \
+	--build-arg NODE_VERSION=9.4.0 \
+	--build-arg NPM_VERSION=5.6.0 \
+	-t bucharestgold/centos7-s2i-nodejs:latest .
+Sending build context to Docker daemon  1.719MB
+Step 1/11 : FROM openshift/base-centos7
+ ---> 4842f0bd3d61
+Step 2/11 : EXPOSE 8080
+ ---> Using cache
+ ---> d58d095a2211
+Step 3/11 : ARG NODE_VERSION
+ ---> Using cache
+ ---> 60df94f52ce4
+Step 4/11 : ARG NPM_VERSION
+ ---> Using cache
+ ---> 9716e587e302
+Step 5/11 : ENV NPM_RUN=start     NODE_VERSION=${NODE_VERSION}     NPM_VERSION=${NPM_VERSION}     NODE_LTS=false     NPM_CONFIG_LOGLEVEL=info     NPM_CONFIG_PREFIX=$HOME/.npm-global     PATH=$HOME/node_modules/.bin/:$HOME/.npm-global/bin/:$PATH     DEBUG_PORT=5858     SUMMARY="Platform for building and running Node.js ${NODE_VERSION} applications"     DESCRIPTION="Node.js $NODEJS_VERSION available as docker container is a base platform for building and running various Node.js $NODEJS_VERSION applications and frameworks. Node.js is a platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices."
+ ---> Using cache
+ ---> 597640c46e69
+Step 6/11 : LABEL io.k8s.description="$DESCRIPTION"       io.k8s.display-name="Node.js $NODE_VERSION"       io.openshift.expose-services="8080:http"       io.openshift.tags="builder,nodejs,nodejs-$NODE_VERSION"       com.redhat.deployments-dir="/opt/app-root/src"       com.redhat.dev-mode="DEV_MODE:false"       com.rehdat.dev-mode.port="DEBUG_PORT:5858"       maintainer="Lance Ball <lball@redhat.com>"       summary="$SUMMARY"       description="$DESCRIPTION"       version="$NODE_VERSION"       name="bucharestgold/centos7-s2i-nodejs"
+ ---> Using cache
+ ---> ec4ff3f997e5
+Step 7/11 : COPY ./s2i/ $STI_SCRIPTS_PATH
+ ---> Using cache
+ ---> a12d4f30745a
+Step 8/11 : COPY ./contrib/ /opt/app-root
+ ---> Using cache
+ ---> 2e437ecdb980
+Step 9/11 : RUN /opt/app-root/etc/install_node.sh
+ ---> Using cache
+ ---> df4e5eaf6407
+Step 10/11 : USER 1001
+ ---> Using cache
+ ---> d064dc368ef5
+Step 11/11 : CMD ${STI_SCRIPTS_PATH}/usage
+ ---> Using cache
+ ---> 5ec589c744bb
+Successfully built 5ec589c744bb
+Successfully tagged bucharestgold/centos7-s2i-nodejs:latest
+BUILDER=bucharestgold/centos7-s2i-nodejs:latest NODE_VERSION=9.4.0 ./test/run.sh
+Running s2i build --pull-policy never  file://./test/test-app bucharestgold/centos7-s2i-nodejs:latest bucharestgold/centos7-s2i-nodejs-testapp
+Running s2i build --pull-policy never  file://./test/test-app bucharestgold/centos7-s2i-nodejs:latest bucharestgold/centos7-s2i-nodejs-testapp --incremental=true --pull-policy=never
+Testing 's2i usage'...
+Testing 'docker run' usage...
+Waiting for container start...
+Starting test application bucharestgold/centos7-s2i-nodejs-testapp...
+Environment: 
+	DEV_MODE=false
+	NODE_ENV=production
+	DEBUG_PORT=5858
+Launching via npm...
+Checking directory writability ...
+
+> node-echo@0.0.1 start /opt/app-root/src
+> node server.js
+
+Checking post install ...
+Server running on 0.0.0.0:8080
+Checking nodejs runtime version ...
+Testing HTTP connection...
+Sending GET request to http://localhost:8080/
+Testing DEV_MODE=false (default)
+Checking development dependencies not installed ...
+7c8c558e23b060190180fff86a5c5f479f0d90a506c896b38efdec5d8068be09
+Waiting for container start...
+Starting test application bucharestgold/centos7-s2i-nodejs-testapp...
+Environment: 
+	DEV_MODE=true
+	NODE_ENV=development
+	DEBUG_PORT=5858
+Installing dev dependencies...
+Testing DEV_MODE=true
+Checking development dependencies ...
+ERROR[exec /bin/bash -c ls -d node_modules/nodemon] Expected 'nodemon', got ''
+STI image 'bucharestgold/centos7-s2i-nodejs:latest' test FAILED (exit code: 1)
+
+> nodemon@1.14.11 postinstall /opt/app-root/src/node_modules/nodemon
+> node -e "console.log('\u001b[32mLove nodemon? You can now support the project via the open collective:\u001b[22m\u001b[39m\n > \u001b[96m\u001b[1mhttps://opencollective.com/nodemon/donate\u001b[0m\n')" || exit 0
+
+[32mLove nodemon? You can now support the project via the open collective:[22m[39m
+ > [96m[1mhttps://opencollective.com/nodemon/donate[0m
+
+
+> node-echo@0.0.1 postinstall /opt/app-root/src
+> tsc greeting.ts
+
+added 247 packages in 6.801s
+86c8f9c0b457608e359a7b88fd2266b5af0b6b6822d3793e0ac9b0fee5da233d

@@ -173,6 +173,30 @@ test_post_install() {
   fi
 }
 
+test_development_dependencies() {
+  local run_cmd="ls -d node_modules/nodemon"
+  local expected="nodemon"
+
+  echo "Checking development dependencies ..."
+  out=$(docker exec $(cat ${cid_file}) /bin/bash -c "${run_cmd}")
+  if ! echo "${out}" | grep -q "${expected}"; then
+    echo "ERROR[exec /bin/bash -c "${run_cmd}"] Expected '${expected}', got '${out}'"
+    return 1
+  fi
+}
+
+test_no_development_dependencies() {
+  local run_cmd="if [ -d node_modules/nodemon ] ; then echo 'exists' ; else echo 'not exists' ; fi"
+  local expected="not exists"
+
+  echo "Checking development dependencies not installed ..."
+  out=$(docker exec $(cat ${cid_file}) /bin/bash -c "${run_cmd}")
+  if ! echo "${out}" | grep -q "${expected}"; then
+    echo "ERROR[exec /bin/bash -c "${run_cmd}"] Expected '${expected}', got '${out}'"
+    return 1
+  fi
+}
+
 # Build the application image twice to ensure the 'save-artifacts' and
 # 'restore-artifacts' scripts are working properly
 prepare
@@ -216,6 +240,8 @@ echo ${logs} | grep -q NODE_ENV=production
 check_result $?
 echo ${logs} | grep -q DEBUG_PORT=5858
 check_result $?
+test_no_development_dependencies
+check_result $?
 cleanup
 
 run_test_application "-e DEV_MODE=true" &
@@ -228,6 +254,10 @@ echo ${logs} | grep -q NODE_ENV=development
 check_result $?
 echo ${logs} | grep -q DEBUG_PORT=5858
 check_result $?
+# Ensure that we install dev dependencies in dev mode
+test_development_dependencies
+check_result $?
+
 cleanup
 
 if image_exists ${APP_IMAGE}; then

@@ -45,5 +45,11 @@ if [ ! -z "$YARN_ENABLED" ]; then
 	yarn install $YARN_ARGS
 else
 	echo "---> Using 'npm install'"
+  if [ "$DEV_MODE" == true ]; then
+    exec npm install
+  else
+    echo "---> Installing in production mode..."
+    exec npm install --only=production
+  fi
 	npm install -s
 fi

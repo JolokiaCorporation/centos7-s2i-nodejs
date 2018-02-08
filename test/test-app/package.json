@@ -10,11 +10,11 @@
     "start": "node server.js"
   },
   "devDependencies": {
-    "nodemon": "*",
-    "typescript": "~2.7.1"
+    "nodemon": "*"
   },
   "dependencies": {
     "@types/node": "~9.4.0",
+    "typescript": "~2.7.1",
     "roi": "*"
   }
 }
