@@ -33,16 +33,16 @@ LABEL io.k8s.description="$DESCRIPTION" \
       com.redhat.deployments-dir="/opt/app-root/src" \
       com.redhat.dev-mode="DEV_MODE:false" \
       com.rehdat.dev-mode.port="DEBUG_PORT:5858" \
-      maintainer="Lance Ball <lball@redhat.com>" \
+      maintainer="John Mitchell <mitch@jolokia.com>" \
       summary="$SUMMARY" \
       description="$DESCRIPTION" \
       version="$NODE_VERSION" \
-      name="bucharestgold/centos7-s2i-nodejs"
+      name="openshift/centos7-s2i-angular-nginx"
 
 COPY ./s2i/ $STI_SCRIPTS_PATH
 COPY ./contrib/ /opt/app-root
 
-RUN /opt/app-root/etc/install_node.sh
+RUN /bin/bash /opt/app-root/etc/install_node.sh
 
 USER 1001
 

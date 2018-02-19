@@ -4,11 +4,16 @@ set -ex
 yum install -y --setopt=tsflags=nodocs openssl
 yum install -y https://github.com/bucharest-gold/node-rpm/releases/download/v${NODE_VERSION}/rhoar-nodejs-${NODE_VERSION}-1.el7.centos.x86_64.rpm
 yum install -y https://github.com/bucharest-gold/node-rpm/releases/download/v${NODE_VERSION}/npm-${NPM_VERSION}-1.${NODE_VERSION}.1.el7.centos.x86_64.rpm
+yum install -y epel-release
+yum install -y nginx
 
 # Install nodemon and yarn
 npm install -g nodemon
+
 ln -s /usr/lib/node_modules/nodemon/bin/nodemon.js /usr/bin/nodemon
 npm install -g yarn -s &>/dev/null
+
+# Ensure nginx starts on boot
 
 # Make /opt/app-root owned by user 1001
 chown -R 1001:0 /opt/app-root
@@ -22,3 +27,5 @@ find /usr/local/lib/node_modules/npm -name test -o -name .bin -type d | xargs rm
 
 # Clean up the stuff we downloaded
 yum clean all -y
+
+mv /opt/app-root/etc/nginx.conf /etc/nginx/nginx.conf
