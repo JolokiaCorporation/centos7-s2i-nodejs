@@ -47,3 +47,16 @@ else
 	echo "---> Using 'npm install'"
 	npm install -s
 fi
+
+echo -e "Building Angular app"
+echo -e "Environment: \n\tDEV_MODE=${DEV_MODE}"
+if [ "$DEV_MODE" == true ]; then
+	echo "Building development mode..."
+	exec ng build -v
+  else
+	echo "Launching via npm..."
+	exec ng build --prod -v
+fi
+echo -e "Moving dist to www root" 
+mv cp -Rfp /tmp/src/dist /var/www
+

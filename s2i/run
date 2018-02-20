@@ -1,32 +1,11 @@
-#!/bin/bash
-
-set -e
-# Set the environment to development by default.
-if [ -z "$DEV_MODE" ]; then
-  export DEV_MODE=false
-fi
-
-build_node() { 
-	echo -e "Building Angular app"
-	echo -e "Environment: \n\tDEV_MODE=${DEV_MODE}"
-	if [ "$DEV_MODE" == true ]; then
-		echo "Building development mode..."
-		exec ng build
-	  else
-		echo "Launching via npm..."
-		exec ng build --prod
-	fi
-	mv dist /var/www
-}
-
-run_nginx() { 
-
-}
-
-
-# Allow debugging the builder image itself, by using:
-# $ docker run -it bucharestgold/centos-s2i-nodejs --debug
+#!/bin/bash -e
 #
-[ "$1" == "--debug" ] && exec /bin/bash
+# S2I run script for the 's2i-nginx' image.
+# The run script executes the server that runs your application.
+#
+# For more information see the documentation:
+#	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
+#
 
-build_node
+echo "Running app on port 8080..."
+exec /usr/sbin/nginx -g "daemon off;"

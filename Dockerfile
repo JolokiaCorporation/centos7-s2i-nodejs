@@ -44,6 +44,15 @@ COPY ./contrib/ /opt/app-root
 
 RUN /bin/bash /opt/app-root/etc/install_node.sh
 
+RUN chown -R 1001:1001 /usr/share/nginx
+RUN chown -R 1001:1001 /var/log/nginx
+RUN chown -R 1001:1001 /var/lib/nginx
+RUN chmod 777 /var/lib/nginx
+RUN touch /run/nginx.pid
+RUN chown -R 1001:1001 /run/nginx.pid
+RUN chmod 777 /run/nginx.pid
+RUN chown -R 1001:1001 /etc/nginx
+
 USER 1001
 
 # Set the default CMD to print the usage

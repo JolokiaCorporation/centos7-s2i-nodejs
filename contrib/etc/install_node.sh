@@ -18,6 +18,7 @@ npm install -g yarn -s &>/dev/null
 # Make /opt/app-root owned by user 1001
 chown -R 1001:0 /opt/app-root
 chmod -R ug+rwx /opt/app-root
+chmod 777 /var/lib/nginx/tmp
 
 # Fix permissions for the npm update-notifier
 # chmod -R 777 /opt/app-root/src/.config
